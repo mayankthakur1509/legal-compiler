@@ -42,14 +42,14 @@ jobs:
           python compiler/compile.py
 
       # -----------------------------
-      # NODE (WORKER + REACT)
+      # NODE (WORKER)
       # -----------------------------
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: "20"
 
-      - name: Install Node deps
+      - name: Install Wrangler
         run: |
           npm install -g wrangler
 
@@ -61,7 +61,7 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
-          wrangler deploy
+          wrangler deploy worker/api_fib.js
 
       # -----------------------------
       # DEPLOY CLOUDFLARE PAGES (dist/)
