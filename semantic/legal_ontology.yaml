@@ -1,0 +1,4 @@
+Attorney:
+  fields: [name, role, jurisdiction]
+PracticeArea:
+  fields: [name, risk, outcome]
