@@ -17,7 +17,7 @@
     - FBAR
     - FATCA
 
-- name: Maria Test
+- name: Maria Testing
   role: Expat Tax Specialist
   practice_areas:
     - Transfer Pricing
