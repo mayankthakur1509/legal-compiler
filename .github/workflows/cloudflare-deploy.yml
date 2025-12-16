@@ -53,15 +53,15 @@ jobs:
         run: |
           npm install -g wrangler
 
-      # -----------------------------
-      # DEPLOY CLOUDFLARE WORKER
-      # -----------------------------
-      - name: Deploy Worker Engine v4.0.2
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-        run: |
-          wrangler deploy worker/api_fib.js
+      # # -----------------------------
+      # # DEPLOY CLOUDFLARE WORKER
+      # # -----------------------------
+      # - name: Deploy Worker Engine v4.0.2
+      #   env:
+      #     CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      #     CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      #   run: |
+      #     wrangler deploy worker/api_fib.js
 
       # -----------------------------
       # DEPLOY CLOUDFLARE PAGES (dist/)
