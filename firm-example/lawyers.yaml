@@ -16,3 +16,9 @@
   practice_areas:
     - FBAR
     - FATCA
+
+- name: Maria
+  role: International Tax Attorney
+  practice_areas:
+    - FBAR
+    - FATCA    
