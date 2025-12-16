@@ -71,5 +71,5 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
-          projectName: multi-lawyer-legal-compiler-demo
+          projectName: multi-lawyer-legal-compiler-demo2
           directory: dist
