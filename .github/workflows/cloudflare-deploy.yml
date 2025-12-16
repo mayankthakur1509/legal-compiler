@@ -1,0 +1,75 @@
+name: Build & Deploy MintSite Enterprise
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "compiler/**"
+      - "worker/**"
+      - "semantic/**"
+      - "firm-example/**"
+      - "src/**"
+      - "wrangler.toml"
+      - ".github/workflows/**"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # -----------------------------
+      # CHECKOUT
+      # -----------------------------
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # -----------------------------
+      # PYTHON (LEGAL COMPILER)
+      # -----------------------------
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install Python deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml python-slugify
+
+      - name: Run Legal Compiler
+        run: |
+          python compiler/compile.py
+
+      # -----------------------------
+      # NODE (WORKER + REACT)
+      # -----------------------------
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Node deps
+        run: |
+          npm install -g wrangler
+
+      # -----------------------------
+      # DEPLOY CLOUDFLARE WORKER
+      # -----------------------------
+      - name: Deploy Worker Engine v4.0.2
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+        run: |
+          wrangler deploy
+
+      # -----------------------------
+      # DEPLOY CLOUDFLARE PAGES (dist/)
+      # -----------------------------
+      - name: Deploy Authority Pages to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          projectName: multi-lawyer-legal-compiler-demo
+          directory: dist
