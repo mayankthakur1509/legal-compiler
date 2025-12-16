@@ -17,8 +17,8 @@
     - FBAR
     - FATCA
 
-- name: Maria
-  role: International Tax Attorney
+- name: Maria Test
+  role: Expat Tax Specialist
   practice_areas:
-    - FBAR
-    - FATCA    
+    - Transfer Pricing
+    - IRS Dispute   
