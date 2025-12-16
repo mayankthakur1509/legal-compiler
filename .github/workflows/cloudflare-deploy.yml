@@ -6,12 +6,13 @@ on:
       - main
     paths:
       - "compiler/**"
-      - "worker/**"
       - "semantic/**"
       - "firm-example/**"
       - "src/**"
-      - "wrangler.toml"
       - ".github/workflows/**"
+
+permissions:
+  contents: write
 
 jobs:
   build-and-deploy:
@@ -23,9 +24,11 @@ jobs:
       # -----------------------------
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       # -----------------------------
-      # PYTHON (LEGAL COMPILER)
+      # PYTHON – AUTO COMPILER
       # -----------------------------
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -37,36 +40,32 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyyaml python-slugify
 
-      - name: Run Legal Compiler
+      - name: Auto-compile MintSite
         run: |
           python compiler/compile.py
 
       # -----------------------------
-      # NODE (WORKER)
+      # COMMIT GENERATED DIST/
       # -----------------------------
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Install Wrangler
+      - name: Commit compiled output
         run: |
-          npm install -g wrangler
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      # # -----------------------------
-      # # DEPLOY CLOUDFLARE WORKER
-      # # -----------------------------
-      # - name: Deploy Worker Engine v4.0.2
-      #   env:
-      #     CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      #     CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      #   run: |
-      #     wrangler deploy worker/api_fib.js
+          git add dist || true
+
+          if git diff --cached --quiet; then
+            echo "No changes in dist/"
+            exit 0
+          fi
+
+          git commit -m "Auto-compiled MintSite output [ci skip]"
+          git push origin main
 
       # -----------------------------
-      # DEPLOY CLOUDFLARE PAGES (dist/)
+      # DEPLOY CLOUDFLARE PAGES
       # -----------------------------
-      - name: Deploy Authority Pages to Cloudflare Pages
+      - name: Deploy Authority Pages
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
