@@ -40,6 +40,16 @@ jobs:
           python -m pip install --upgrade pip
           pip install pyyaml python-slugify
 
+      # -----------------------------
+      # CLEAN OLD OUTPUT (IMPORTANT)
+      # -----------------------------
+      - name: Clean previous dist
+        run: |
+          rm -rf dist
+
+      # -----------------------------
+      # AUTO COMPILE
+      # -----------------------------
       - name: Auto-compile MintSite
         run: |
           python compiler/compile.py
