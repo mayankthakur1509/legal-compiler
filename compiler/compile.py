@@ -25,9 +25,31 @@ def page(title, body):
 </body>
 </html>"""
 
+
+# -----------------------------
+# NEW: ROOT LAWYER LISTING PAGE
+# -----------------------------
+def generate_root_index(lawyers):
+    items = []
+    for lw in lawyers:
+        slug = slugify(lw["name"])
+        items.append(
+            f"<li><a href='/lawyers/{slug}/'>{lw['name']}</a> – {lw['role']}</li>"
+        )
+
+    html = page(
+        "Our Lawyers",
+        f"<ul>{''.join(items)}</ul>"
+    )
+
+    write(f"{BASE_OUT}/index.html", html)
+
 def run():
     lawyers = load_yaml("firm-example/lawyers.yaml")
     practices = load_yaml("firm-example/practice_areas.yaml")
+
+    generate_root_index(lawyers)
+
 
     for lw in lawyers:
         slug = slugify(lw["name"])
